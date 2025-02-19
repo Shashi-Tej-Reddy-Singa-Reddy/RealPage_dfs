@@ -13,7 +13,7 @@ USE ScreeningConfiguration
  
 PRINT 'Before:  Find the dispute where it can no longer be completed due to filtering'
 SELECT cdStatus, * FROM CriminalDisputes  WITH(NOLOCK) 
-WHERE appid = '30997'AND apgID =  '30977'AND cdSiteID = '4953876' and cdEntityID = '1181194' --entityId == PMCId
+WHERE appid = '30997'AND apgID =  '30977'AND cdSiteID = ' ' and cdEntityID = '1181194' --entityId == PMCId
  
 PRINT '  '
 PRINT 'UPDATE: the cdStatus to completed which is the value of 2, so it will no longer show in the dispute queue'
