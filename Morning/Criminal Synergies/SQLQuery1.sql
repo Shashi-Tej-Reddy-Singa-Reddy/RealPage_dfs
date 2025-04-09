@@ -4,7 +4,7 @@ select logid, createdate, source, PMCID, siteid, uniqueid as appid, apgid, statu
 FROM DBO.ExternalServiceLog WITH(NOLOCK)
 where source='crmsyn'
 and status='WKG'
-and StartTime between '2024-10-23 00:00:00.000' and '2025-10-23 23:59:00.000' 
+and StartTime between '2024-01-01 00:00:00.000' and '2025-12-12 23:59:00.000' 
 order by starttime
 
 
