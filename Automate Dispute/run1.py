@@ -20,7 +20,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 
-PME_NUMBER = 'PME-440797'
+PME_NUMBER = 'PME-441180'
 
 
 
@@ -64,12 +64,12 @@ time.sleep(2)
 search_field = WebDriverWait(driver, 10).until(
    EC.visibility_of_element_located((By.ID, 'phSearchInput'))
 )
-search_field.send_keys("PME-440797")
+search_field.send_keys("PME-441180")
 search_field.send_keys(Keys.RETURN)
 WebDriverWait(driver, 10).until(
-   EC.presence_of_element_located((By.XPATH, "//a[contains(text(), 'PME-440797')]"))
+   EC.presence_of_element_located((By.XPATH, "//a[contains(text(), 'PME-441180')]"))
 )
-first_result = driver.find_element(By.XPATH, "//a[contains(text(), 'PME-440797')]")
+first_result = driver.find_element(By.XPATH, "//a[contains(text(), 'PME-441180')]")
 first_result.click()
 WebDriverWait(driver, 10).until(
    EC.presence_of_element_located((By.XPATH, "//td[contains(text(), 'Description')]"))
@@ -77,17 +77,30 @@ WebDriverWait(driver, 10).until(
 steps_field = driver.find_element(By.XPATH, "//div[@id='00N37000006GRdOj_id0_mainDetail_ileinner']")
 steps_data = steps_field.text
 data = {
-   "Search Term": ["PME-440797"],  # The term we searched for
+   "Search Term": ["PME-441180"],  # The term we searched for
    "Description": [steps_data]  # The extracted text data
 }
 time.sleep(1)
 description = data['Description'][0]
-apgid = None  # Initialize variable
+
+
+# Initialize variable
+apgid = None  
+siteid = None  # Initialize variable for Site ID
+
+# Loop through each line in the description
 for line in description.split('\n'):
-   if "Apg ID:" in line:
-       apgid = line.split("Apg ID:")[1].strip()
-# Display the value
+    if "Apg ID :" in line:  # Ensure spacing matches
+        apgid = line.split("Apg ID :")[1].strip()  # Extract and clean
+    elif "App Group ID :" in line:  # Alternative field name handling
+        apgid = line.split("App Group ID :")[1].strip()
+    elif "Site ID :" in line:  # Extract Site ID
+        siteid = line.split("Site ID :")[1].strip()
+
+# Display the extracted values
 print(f"Apg ID: {apgid}")
+print(f"Site ID: {siteid}")
+
 time.sleep(1)
 
 
@@ -101,7 +114,7 @@ try:
    site_id_input = WebDriverWait(driver, 10).until(
        EC.presence_of_element_located((By.ID, 'txtsiteId'))  # Replace 'site-id' with the actual ID or locator for the input box
    )
-   site_id_input.send_keys('5069241')  # Replace '12345' with the actual Site Id you want to enter
+   site_id_input.send_keys(siteid)  # Replace '12345' with the actual Site Id you want to enter
 except Exception as e:
    print(f"Error locating Site Id input box: {e}")
 # Click the Search button
