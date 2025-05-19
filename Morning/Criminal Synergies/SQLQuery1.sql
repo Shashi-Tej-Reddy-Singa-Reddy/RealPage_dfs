@@ -49,3 +49,18 @@ where transactionid in
 
 )
 order by transactionid, timestamp
+
+
+
+
+
+
+
+
+--1
+USE ScreeningConfiguration
+select logid, createdate, source, PMCID, siteid, uniqueid as appid, apgid, status, message, externalid, starttime, lastupdate, pmcurl
+FROM DBO.ExternalServiceLog WITH(NOLOCK)
+where source='crmsyn' and apgid in (41335,51083,10903,20507)
+and StartTime between '2024-01-01 00:00:00.000' and '2025-12-12 23:59:00.000'
+order by starttime
