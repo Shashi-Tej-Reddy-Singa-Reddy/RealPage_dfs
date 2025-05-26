@@ -38,3 +38,4 @@ where appid = 71 and deleted=0 and Servicename = 'Criminal' and Subservice IN ('
 
 Select * from ScreeningXGXML with(nolock)
 where appid = 71  and deleted=0 and Servicename = 'Credit' and Subservice IN ('Search', 'NameVariation')
+

@@ -5,7 +5,7 @@ File: Screening_DF_PME-446172_UnifiedCrimAddiName_S5216758
 */
 use S5216758
 go
-
+    
 Select * from ScreeningServiceInfo with(nolock)
 where appid =  10116 and ServiceName in ('Criminal','CriminalOutofNetwork')
 

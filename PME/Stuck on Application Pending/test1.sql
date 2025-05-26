@@ -1,6 +1,6 @@
 use ScreeningConfiguration
 select * from externalservicelog
-where apgid = 48400 and siteID = 4142139 and Source = 'UNIFIEDCRIMINAL'
+where apgid = 10350 and siteID = 3858551 and Source = 'UNIFIEDCRIMINAL'
 
 {
   "ConsumerId": null,
@@ -8,102 +8,98 @@ where apgid = 48400 and siteID = 4142139 and Source = 'UNIFIEDCRIMINAL'
   "CriminalFilterResponse": null,
   "ErrorDetails": {
     "Status": 404,
-    "Message": "No records found for ConsumerId - 88f8804c-6a06-40ea-874b-7ca70297ac42 | TransactionId - 6a6cb067-735a-49e3-98ab-4ca827daf3c2 | OrderName - Criminal"
+    "Message": "No records found for ConsumerId - 9f57f5b1-8bda-4633-8870-6aa17216a1e0 | TransactionId - 918ba8e5-32ca-480c-b053-7bfaf29b9d41 | OrderName - Criminal"
   }
 }
 
-External id
-6a6cb067-735a-49e3-98ab-4ca827daf3c2
+external id 
+918ba8e5-32ca-480c-b053-7bfaf29b9d41
 
 {
   "Consumer": {
-    "FirstName": "Jerome",
-    "MiddleName": "",
-    "LastName": "Douglas",
-    "DateOfBirth": "9/18/1957",
-    "EmailAddress": "none@none.com",
-    "AppPartnerUniqueId": "48400_49788",
+    "FirstName": "Lakesiha",
+    "MiddleName": "Mattie",
+    "LastName": "Jordan",
+    "DateOfBirth": "7/25/1993",
+    "EmailAddress": "lakesihacoleman@gmail.com",
+    "AppPartnerUniqueId": "10350_10488",
     "Ssn": null,
     "Address": [
       {
         "Type": 3,
-        "AddressLine1": "2100 Brooks Dr",
+        "AddressLine1": "3149 E Desert Inn Rd",
         "AddressLine2": "",
-        "City": "Forestville",
-        "State": "MD",
+        "City": "Las Vegas",
+        "State": "NV",
         "Country": "US",
-        "Zip": "20747-1063",
+        "Zip": "89121-3831",
         "IsPrimary": false
       },
       {
         "Type": 1,
-        "AddressLine1": "3519 Maywood Ln  ",
+        "AddressLine1": "3700 E Bonanza Rd Apt 1198",
         "AddressLine2": "",
-        "City": "Suitland",
-        "State": "MD",
+        "City": "Las Vegas",
+        "State": "NV",
         "Country": "US",
-        "Zip": "20746-2805",
+        "Zip": "89110-2189",
         "IsPrimary": true
       },
       {
         "Type": 2,
-        "AddressLine1": "  3519 Maywood Ln ",
-        "AddressLine2": "",
-        "City": "Suitland",
-        "State": "MD",
-        "Country": "US",
-        "Zip": "20746-2805",
-        "IsPrimary": true
-      },
-      {
-        "Type": 2,
-        "AddressLine1": "3519Maywood Ln",
+        "AddressLine1": "3700BonanzaRd",
         "AddressLine2": null,
-        "City": "Suitland",
-        "State": "MD",
+        "City": "Las Vegas",
+        "State": "NV",
         "Country": "US",
-        "Zip": "20746-2805",
+        "Zip": "89110-2189",
         "IsPrimary": false
       },
       {
         "Type": 2,
-        "AddressLine1": "3519MAYWOODLN",
+        "AddressLine1": "2508E MESQUITEAV",
         "AddressLine2": null,
-        "City": "SUITLAND",
-        "State": "MD",
+        "City": "LAS VEGAS",
+        "State": "NV",
         "Country": "US",
-        "Zip": "20746",
+        "Zip": "89101",
         "IsPrimary": false
       },
       {
         "Type": 2,
-        "AddressLine1": "3035STANTON SERD",
+        "AddressLine1": "3700E BONANZARD",
         "AddressLine2": null,
-        "City": "WASHINGTON",
-        "State": "DC",
+        "City": "LAS VEGAS",
+        "State": "NV",
         "Country": "US",
-        "Zip": "20020",
+        "Zip": "89110",
         "IsPrimary": false
       },
       {
         "Type": 2,
-        "AddressLine1": "6808WALKER MILLRD",
+        "AddressLine1": "6513BANNOCKWY",
         "AddressLine2": null,
-        "City": "SUITLAND",
-        "State": "MD",
+        "City": "LAS VEGAS",
+        "State": "NV",
         "Country": "US",
-        "Zip": "20746",
+        "Zip": "89107",
         "IsPrimary": false
       }
     ],
     "AdditionalNames": [
-      { "FirstName": "", "MiddleName": "", "LastName": "DOUGLAS,JEROME,KEITH" }
+      { "FirstName": "", "MiddleName": "Mattie", "LastName": "JORDAN,LEKISHA" },
+      {
+        "FirstName": "",
+        "MiddleName": "Mattie",
+        "LastName": "JORDAN,LAKEISHA,M"
+      },
+      { "FirstName": "", "MiddleName": "Mattie", "LastName": "MATTIE,JORDAN" }
     ],
-    "Gender": "M"
+    "Gender": "F"
   },
   "Transaction": {
-    "CompanyID": "4142103",
-    "PropertyID": "4142139",
+    "CompanyID": "2159466",
+    "PropertyID": "3858551",
     "AppPartner": "LDS",
     "PMS": "OS",
     "Orders": [

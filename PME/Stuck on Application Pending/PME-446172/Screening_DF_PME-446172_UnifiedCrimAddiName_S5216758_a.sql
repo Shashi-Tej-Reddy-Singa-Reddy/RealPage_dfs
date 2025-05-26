@@ -6,35 +6,13 @@ File: Screening_DF_PME-446172_UnifiedCrimAddiName_S5216758
 use S5216758
 go
 
-Select * from ScreeningServiceInfo with(nolock)
-where appid =  10116 and ServiceName in ('Criminal','CriminalOutofNetwork')
-
--- delete from ScreeningServiceInfo for Criminal order
-Delete from ScreeningServiceInfo
-where appid = 10116  and ServiceName in ('Criminal','CriminalOutofNetwork')
-
 Select * from ScreeningXGXML with(nolock)
-where appid = 10116  and deleted=0 and Servicename = 'Criminal' and Subservice IN ('SearchNote')
+where id =47103 and appid = 10116  and deleted=0 and Servicename = 'Credit' and Subservice IN ('Search')
 
--- delete criminal searchnote
 UPDATE screeningxgxml
 SET deleted = 1, deletedate = GETDATE()
-where appid = 10116  and deleted=0 and  Servicename = 'Criminal' and Subservice IN ('SearchNote')
+where id =47103 and appid = 10116 and deleted=0 and Servicename = 'Credit' and Subservice IN ('Search')
+
 
 Select * from ScreeningXGXML with(nolock)
-where appid = 10116  and deleted=0 and Servicename = 'Credit' and Subservice IN ('Search', 'NameVariation')
-
--- delete and update credit xmls with updated name variations
-UPDATE screeningxgxml
-SET deleted = 1, deletedate = GETDATE()
-where appid = 10116 and deleted=0 and Servicename = 'Credit' and Subservice IN ('Search', 'NameVariation')
-
-
-Select * from ScreeningServiceInfo with(nolock)
-where appid = 10116 and ServiceName in ('Criminal','CriminalOutofNetwork')
-
-Select * from ScreeningXGXML with(nolock)
-where appid = 10116 and deleted=0 and Servicename = 'Criminal' and Subservice IN ('SearchNote')
-
-Select * from ScreeningXGXML with(nolock)
-where appid = 10116  and deleted=0 and Servicename = 'Credit' and Subservice IN ('Search', 'NameVariation')
+where id =47103 and appid = 10116  and deleted=0 and Servicename = 'Credit' and Subservice IN ('Search')
