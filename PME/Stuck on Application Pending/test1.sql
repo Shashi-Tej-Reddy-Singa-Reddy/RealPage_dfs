@@ -1,3 +1,3 @@
 use ScreeningConfiguration
 select * from externalservicelog
-where apgid =52017 and siteID = 3508346 and Source = 'UNIFIEDCRIMINAL'
+where apgid = 80812 and siteID = 5075179 and Source = 'UNIFIEDCRIMINAL' 
