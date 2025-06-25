@@ -67,5 +67,11 @@ order by starttime
 
 
 USE ScreeningConfiguration
-select * from externalservicelog where apgid='91180' and siteid='1330094'
+select * from externalservicelog where apgid='31377' and siteid='4570502'
+and source like '%CRIMINAL%'
+
+
+
+USE ScreeningConfiguration
+select * from externalservicelog where apgid='32094' and siteid='4022545'
 and source like '%CRIMINAL%'

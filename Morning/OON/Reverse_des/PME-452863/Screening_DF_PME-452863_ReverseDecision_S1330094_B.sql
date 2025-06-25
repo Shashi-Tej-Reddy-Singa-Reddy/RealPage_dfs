@@ -107,7 +107,7 @@ WHERE apgid in (91180)
 PRINT 'Insert activity entry concerning the datafix can be submitted.'
 PRINT ' '
 INSERT INTO  Screeningactivitylog (apgID, actDate, codeActivityTypeCode, actDescription, actUserID,  Displaybit, ModifyDate, leaID, GuestcardID,OSSiteID)
-VALUES ('91180', GETDATE(), 'SUBMIT', 'datafix - Reverse decision to no decision.', '1', '1', GETDATE(),'30709', NULL,'4380735')
+VALUES ('91180', GETDATE(), 'SUBMIT', 'datafix - Reverse decision to no decision.', '1', '1', GETDATE(),'142083', NULL,'4380735')
 
 
 PRINT 'Display the activity log - After'
