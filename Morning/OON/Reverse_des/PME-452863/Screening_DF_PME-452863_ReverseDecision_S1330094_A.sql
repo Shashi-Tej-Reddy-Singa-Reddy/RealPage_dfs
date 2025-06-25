@@ -1,7 +1,7 @@
 /*
 
 Description of the Problem: Reverse decision to no decision data fix.
-File Name:  Screening_DF_PME-452863_ReverseDecision_S1330094
+File Name:  Screening_DF_PME-452863_ReverseDecision_S1330094_A
 
 */
 
@@ -12,6 +12,7 @@ USE S1330094
 SELECT appID, apgID, appFirstName, appLastName, appTransmitDate, appBirthDate
 FROM ScreeningApplicant
 WHERE ApGId in(91176)
+
 
 
 PRINT 'List the screeningxglog'
