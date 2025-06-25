@@ -66,5 +66,6 @@ and StartTime between '2024-01-01 00:00:00.000' and '2025-12-12 23:59:00.000'
 order by starttime
 
 
-
-select * from externalservicelog where apgid='48444' and siteid='4142139'
+USE ScreeningConfiguration
+select * from externalservicelog where apgid='91180' and siteid='1330094'
+and source like '%CRIMINAL%'
