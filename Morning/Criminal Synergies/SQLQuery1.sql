@@ -73,5 +73,5 @@ and source like '%CRIMINAL%'
 
 
 USE ScreeningConfiguration
-select * from externalservicelog where apgid='30554' and siteid='4789242'
+select * from externalservicelog where apgid='11' and siteid='5482282'
 and source like '%CRIMINAL%'
