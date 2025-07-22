@@ -1,7 +1,7 @@
 /*
 
 Description of the Problem: Reverse decision to no decision data fix.
-File Name:  Screening_DF_PME-458067_ReverseDecision_S4203584
+File Name:  Screening_DF_PME-458154_ReverseDecision_S4203584
 
 
 */
@@ -33,7 +33,7 @@ FROM ScreeningXgDecision  WHERE ApGId in (52418)
 PRINT 'Update:Reverse decision'
 Update screeningXgDecision
 set dtID = 0,deccode = 0
-where DecID = 86628 and apgid = 52418
+where DecID = 86644 and apgid = 52418
 
 PRINT 'after: List the Decision'
 SELECT *
