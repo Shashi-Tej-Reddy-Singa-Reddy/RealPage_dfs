@@ -1,7 +1,7 @@
 /*
 
 Description of the Problem: Reverse decision to no decision data fix.
-File Name:  Screening_DF_PME-458154_ReverseDecision_S4203584
+File Name:  Screening_DF_PME-458159_ReverseDecision_S4542277
 
 
 */
@@ -9,17 +9,17 @@ File Name:  Screening_DF_PME-458154_ReverseDecision_S4203584
 PRINT '******************** DATAFIX STARTED:  ********************'
 PRINT 'List the applicants'
 
-USE S4203584
+USE S4542277
 SELECT appID, apgID, appFirstName, appLastName, appTransmitDate, appBirthDate
 FROM ScreeningApplicant
-WHERE ApGId in(52418)
+WHERE ApGId in(20462)
 
 
 
 PRINT 'List the screeningxglog'
 	SELECT *
 	FROM screeningxglog
-	WHERE (appid in(52984,52985) or AppGID in (52418))
+	WHERE (appid in(20508) or AppGID in (20462))
 	AND errorxml is not null
 	ORDER BY appid
 
@@ -29,16 +29,16 @@ SELECT * FROM ScreeningXgDecisionType
 
 PRINT 'BEFORE: List the Decision'
 SELECT *
-FROM ScreeningXgDecision  WHERE ApGId in (52418)
+FROM ScreeningXgDecision  WHERE ApGId in (20462)
 
 PRINT 'Update:Reverse decision'
 Update screeningXgDecision
 set dtID = 0,deccode = 0
-where DecID = 86644 and apgid = 52418
+where DecID = 61099 and apgid = 20462
 
 PRINT 'after: List the Decision'
 SELECT *
-FROM ScreeningXgDecision  WHERE ApGId in (52418)
+FROM ScreeningXgDecision  WHERE ApGId in (20462)
 
 
 PRINT 'BEFORE:  List the decision information in the screening applicant group'
@@ -53,7 +53,7 @@ SELECT apgid
    ,apgDispositionModifyUserOverride
    ,apgDispositionModifyDateOverride
 FROM ScreeningApplicantGroup
-WHERE ApGId in (52418) 
+WHERE ApGId in (20462) 
 
 
 PRINT 'Update the information to the result received'
@@ -68,7 +68,7 @@ set codeDispositionCode = NULL
   ,codeDispositionCodeOverride= NULL
   ,apgDispositionModifyUserOverride= NULL
   ,apgDispositionModifyDateOverride= NULL
-where apgid in (52418)
+where apgid in (20462)
 
 
 PRINT 'AFTER:  List the decision information in the screening applicant group'
@@ -83,39 +83,39 @@ SELECT apgid
    ,apgDispositionModifyUserOverride
    ,apgDispositionModifyDateOverride
 FROM ScreeningApplicantGroup
-WHERE ApGId in (52418)
+WHERE ApGId in (20462)
 
 PRINT 'BEFORE:  List the asrResult in the AppScreeningResults Table'
 SELECT *
 FROM appscreeningresults
-WHERE asrAppGID in (52418)
+WHERE asrAppGID in (20462)
 
 
 Print'Update screening results to not completed'
 Update appscreeningresults
 set asrresult = 0
-where asrappgid = 52418
+where asrappgid = 20462
 
 PRINT 'After:  List the asrResult in the AppScreeningResults Table'
 SELECT *
 FROM appscreeningresults
-WHERE asrAppGID in (52418)
+WHERE asrAppGID in (20462)
 
 PRINT 'Display the activity log - Before'
 SELECT * FROM screeningactivitylog
-WHERE apgid in (52418)
+WHERE apgid in (20462)
 
 
 PRINT 'Insert activity entry concerning the datafix can be submitted.'
 PRINT ' '
 INSERT INTO  Screeningactivitylog (apgID, actDate, codeActivityTypeCode, actDescription, actUserID,  Displaybit, ModifyDate, leaID, GuestcardID,OSSiteID)
-VALUES ('52418', GETDATE(), 'SUBMIT', 'datafix - Reverse decision to no decision.', '1', '1', GETDATE(),'53566', NULL,'4380735')
+VALUES ('20462', GETDATE(), 'SUBMIT', 'datafix - Reverse decision to no decision.', '1', '1', GETDATE(),'30886', NULL,'4380735')
 
 
 PRINT 'Display the activity log - After'
 PRINT ' '
 SELECT * 
 FROM screeningactivitylog
-WHERE apgid in (52418)
+WHERE apgid in (20462)
 
 PRINT '******************** DATAFIX COMPLETED:   ********************'
