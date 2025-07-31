@@ -77,4 +77,4 @@ select * from externalservicelog where apgid='60543' and siteid='5019526'
 
 -- and source like '%CRIMINAL%'
 
-select * from ExternalXmlLog where logid=397970729
+select * from ExternalXmlLog where logid = 397507589
