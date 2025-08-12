@@ -10,13 +10,26 @@ PME-461347
 
 use s5065295
 
+PRINT 'BEFORE:  information in the screeningserviceinfo'
+select * from screeningserviceinfo where appid=630
+
+
+update screeningserviceinfo 
+set ServiceStatus='InProgress' , ServiceResults='NULL'
+where ID = 224 and appid=630
+
+
+PRINT 'AFTER:  information in the screeningserviceinfo'
+select * from screeningserviceinfo where appid=630
+
+
 PRINT 'BEFORE:  information in the screeningxgxml'
 select * from screeningxgxml where appid = 630
 
 PRINT 'Update:  information in the screeningxgxml'
 update screeningxgxml
 set Deleted = 1
-where ID = 88728 and appid = 630
+where ID = 90463 and appid = 630
 
 PRINT 'AFTER:  information in the screeningxgxml'
 select * from screeningxgxml where appid = 630
