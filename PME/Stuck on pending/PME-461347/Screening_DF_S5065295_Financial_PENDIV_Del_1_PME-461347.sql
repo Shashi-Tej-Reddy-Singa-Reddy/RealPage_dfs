@@ -23,6 +23,7 @@ PRINT 'AFTER:  information in the screeningserviceinfo'
 select * from screeningserviceinfo where appid=630
 
 
+
 PRINT 'BEFORE:  information in the screeningxgxml'
 select * from screeningxgxml where appid = 630
 
