@@ -26,6 +26,7 @@ FROM ScreeningApplicantGroup
 WHERE ApGId in (391) 
 
 
+
 PRINT 'Update the information to the result received'
 UPDATE ScreeningApplicantGroup
 set codeDispositionCode = NULL
