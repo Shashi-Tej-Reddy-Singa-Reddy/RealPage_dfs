@@ -9,7 +9,7 @@ PRINT '******************** DATAFIX STARTED:  ********************'
 USE ScreeningConfiguration
 PRINT 'Before:  Find the dispute where it can no longer be completed due to filtering'
 SELECT cdStatus, * FROM CriminalDisputes  WITH(NOLOCK)
-WHERE appid = '22' AND apgID =  '18'AND cdSiteID = '5505715' and cdEntityID = '1184021' --entityId == PMCId
+WHERE appid = '22' AND apgID =  '18' AND cdSiteID = '5505715' and cdEntityID = '1184021' --entityId == PMCId
 PRINT '  '
 PRINT 'UPDATE: the cdStatus to completed which is the value of 2, so it will no longer show in the dispute queue'
 UPDATE dbo.CriminalDisputes
