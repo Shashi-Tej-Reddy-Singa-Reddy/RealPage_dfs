@@ -16,6 +16,9 @@ def process_csv_data(file_path):
         if 'Table_Name' not in df.columns or 'Column_Name' not in df.columns:
             return {"error": "CSV must contain 'Table_Name' and 'Column_Name' columns."}
 
+        # Drop rows where 'Column_Name' is NaN to prevent mixed type errors during sorting.
+        df.dropna(subset=['Column_Name'], inplace=True)
+
         schema = {}
         # Group by Table_Name and create a list of its Column_Names
         grouped = df.groupby('Table_Name')['Column_Name'].apply(list)

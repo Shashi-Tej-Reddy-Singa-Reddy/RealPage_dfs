@@ -49,6 +49,7 @@ PRINT '  '
 --5		80394
 
 
+
 PRINT 'UPDATE search was cancelled'
 UPDATE ScreeningAsyncService
 SET IsCancelled  = 1 ,CancelledDate =getdate()
