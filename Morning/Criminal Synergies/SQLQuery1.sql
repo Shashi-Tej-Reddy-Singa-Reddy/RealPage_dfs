@@ -65,16 +65,18 @@ where source='crmsyn' and apgid in (41335,51083,10903,20507)
 and StartTime between '2024-01-01 00:00:00.000' and '2025-12-12 23:59:00.000'
 order by starttime
 
-
+-- old
 USE ScreeningConfiguration
-select * from externalservicelog where apgid='31377' and siteid='4570502'
+select * from externalservicelog where apgid='205' and siteid='5395015'
 and source like '%CRIMINAL%'
 
 
 
+-- new
 USE ScreeningConfiguration
-select * from externalservicelog where apgid='14120' and siteid='1043900'
+select * from externalservicelog where apgid='162' and siteid='5395025'
 and source like '%CRIMINAL%'
+
 
 
 select * from ExternalXmlLog where logid = 397507589
