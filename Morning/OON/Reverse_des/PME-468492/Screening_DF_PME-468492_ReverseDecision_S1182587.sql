@@ -1,24 +1,24 @@
 /*
 
 Description of the Problem: Reverse decision to no decision data fix.
-File Name:  Screening_DF_PME-466622_ReverseDecision_S1182556
+File Name:  Screening_DF_PME-468492_ReverseDecision_S1182587
 
 */
 
 PRINT '******************** DATAFIX STARTED:  ********************'
 PRINT 'List the applicants'
 
-USE S1182556
+USE S1182587
 SELECT appID, apgID, appFirstName, appLastName, appTransmitDate, appBirthDate
 FROM ScreeningApplicant
-WHERE ApGId in(40637)
+WHERE ApGId in(339)
 
 
 
 PRINT 'List the screeningxglog'
 	SELECT *
 	FROM screeningxglog
-	WHERE (appid in(40810) or AppGID in (40637))
+	WHERE (appid in(379) or AppGID in (339))
 	AND errorxml is not null
 	ORDER BY appid
 
@@ -28,16 +28,16 @@ SELECT * FROM ScreeningXgDecisionType
 
 PRINT 'BEFORE: List the Decision'
 SELECT *
-FROM ScreeningXgDecision  WHERE ApGId in (40637)
+FROM ScreeningXgDecision  WHERE ApGId in (339)
 
 PRINT 'Update:Reverse decision'
 Update screeningXgDecision
 set dtID = 0,deccode = 0
-where DecID =41635 and apgid in (40637)
+where DecID = 61122 and apgid in (339)
 
 PRINT 'after: List the Decision'
 SELECT *
-FROM ScreeningXgDecision  WHERE ApGId in (40637)
+FROM ScreeningXgDecision  WHERE ApGId in (339)
 
 
 PRINT 'BEFORE:  List the decision information in the screening applicant group'
@@ -52,7 +52,7 @@ SELECT apgid
    ,apgDispositionModifyUserOverride
    ,apgDispositionModifyDateOverride
 FROM ScreeningApplicantGroup
-WHERE ApGId in (40637) 
+WHERE ApGId in (339) 
 
 
 PRINT 'Update the information to the result received'
@@ -67,7 +67,7 @@ set codeDispositionCode = NULL
   ,codeDispositionCodeOverride= NULL
   ,apgDispositionModifyUserOverride= NULL
   ,apgDispositionModifyDateOverride= NULL
-where apgid in (40637)
+where apgid in (339)
 
 
 PRINT 'AFTER:  List the decision information in the screening applicant group'
@@ -82,39 +82,40 @@ SELECT apgid
    ,apgDispositionModifyUserOverride
    ,apgDispositionModifyDateOverride
 FROM ScreeningApplicantGroup
-WHERE ApGId in (40637)
+WHERE ApGId in (339)
 
 PRINT 'BEFORE:  List the asrResult in the AppScreeningResults Table'
-SELECT *
+SELECT asrresult,*
 FROM appscreeningresults
-WHERE asrAppGID in (40637)
+WHERE asrAppGID in (339)
+
 
 
 Print'Update screening results to not completed'
 Update appscreeningresults
 set asrresult = 0
-where asrappgid in (40637)
+where asrappgid in (339)
 
 PRINT 'After:  List the asrResult in the AppScreeningResults Table'
 SELECT *
 FROM appscreeningresults
-WHERE asrAppGID in (40637)
+WHERE asrAppGID in (339)
 
 PRINT 'Display the activity log - Before'
 SELECT * FROM screeningactivitylog
-WHERE apgid in (40637)
+WHERE apgid in (339)
 
 
 PRINT 'Insert activity entry concerning the datafix can be submitted.'
 PRINT ' '
 INSERT INTO  Screeningactivitylog (apgID, actDate, codeActivityTypeCode, actDescription, actUserID,  Displaybit, ModifyDate, leaID, GuestcardID,OSSiteID)
-VALUES ('40637', GETDATE(), 'SUBMIT', 'datafix - Reverse decision to no decision.', '1', '1', GETDATE(),'41184', NULL,'1182556')
+VALUES ('339', GETDATE(), 'SUBMIT', 'datafix - Reverse decision to no decision.', '1', '1', GETDATE(),'30655', NULL,'1182587')
 
 
 PRINT 'Display the activity log - After'
 PRINT ' '
 SELECT * 
 FROM screeningactivitylog
-WHERE apgid in (40637)
+WHERE apgid in (339)
 
 PRINT '******************** DATAFIX COMPLETED:   ********************'
