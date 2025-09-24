@@ -75,7 +75,7 @@ and source like '%CRIMINAL%'
 
 -- new
 USE ScreeningConfiguration
-select * from externalservicelog where apgid='43132' and siteid='1058820'
+select * from externalservicelog where apgid='6' and siteid='5468444'
 and source like '%CRIMINAL%'
 
 
