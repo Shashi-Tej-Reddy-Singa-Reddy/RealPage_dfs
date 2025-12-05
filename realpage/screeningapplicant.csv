@@ -578,7 +578,6 @@ ScreeningServiceInfo,OSSiteID
 ScreeningServiceInfo,PreviousServiceResults
 ScreeningServiceInfo,RetryCount
 screeningapplicant,appID
-screeningapplicant,apgID
 screeningapplicant,appSequence
 screeningapplicant,codeAppStatusCode
 screeningapplicant,appFirstName

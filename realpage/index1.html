@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schema Visualizer & Favorites</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+        
+        /* Typography Enhancements */
+        .table-name-lg { font-size: 1.3rem; font-weight: 700; color: #2c3e50; }
+        .col-name-md { font-size: 1rem; color: #555; }
+        
+        .card { border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 12px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 12px; text-align: center; border-left: 5px solid #3498db; }
+        
+        /* Search Box */
+        .search-box { 
+            padding: 15px 25px; font-size: 1.2rem; border-radius: 50px; border: 2px solid #e0e0e0; 
+            transition: all 0.3s;
+        }
+        .search-box:focus { border-color: #3498db; box-shadow: 0 0 15px rgba(52, 152, 219, 0.2); outline: none; }
+
+        /* Network Graph */
+        #network-container { height: 650px; background: white; border-radius: 12px; border: 1px solid #eee; }
+
+        /* Favorites UI */
+        .fav-btn { cursor: pointer; color: #ccc; transition: color 0.2s; font-size: 1.2rem; }
+        .fav-btn.active { color: #f1c40f; } /* Gold color for active favorite */
+        .fav-btn:hover { color: #f39c12; }
+
+        .badge-fav { background-color: #f1c40f; color: #fff; font-size: 0.7rem; margin-left: 5px; vertical-align: middle; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3">
+    <a class="navbar-brand fw-bold" href="#">📊 DataSchema</a>
+    <div class="ms-auto d-flex align-items-center gap-3">
+        <div class="text-white small">
+            <span class="fw-bold">{{ total_tables }}</span> Tables | 
+            <span class="fw-bold">{{ total_columns }}</span> Cols
+        </div>
+        <button class="btn btn-warning fw-bold rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#favModal">
+            <i class="fas fa-star me-2"></i> Manage Favorites
+        </button>
+    </div>
+</nav>
+
+<div class="container-fluid px-4 py-4">
+    
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-6">
+            <input type="text" id="searchInput" class="form-control search-box" 
+                   placeholder="Search Tables or Columns..." onkeyup="handleInput()">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-7 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold m-0 text-primary">Connections Graph</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div id="network-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 mb-4">
+            <div class="card h-100" style="max-height: 720px; overflow: hidden;">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold m-0">Data Dictionary</h5>
+                    <small class="text-muted">Sorted by Favorites</small>
+                </div>
+                <div class="card-body p-0 overflow-auto">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th style="width: 50px;">Fav</th>
+                                <th>Table Name</th>
+                                <th>Column Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            </tbody>
+                    </table>
+                    <div id="noResults" class="text-center p-5 text-muted" style="display:none;">
+                        <i class="fas fa-search fa-2x mb-3"></i><br>No matches found.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="favModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold"><i class="fas fa-star me-2"></i>My Favorites</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 border-end">
+                        <h6 class="fw-bold text-danger">Favorite Tables</h6>
+                        <ul id="favTableList" class="list-group list-group-flush small"></ul>
+                        <div id="noFavTables" class="text-muted small mt-2">No favorite tables yet.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-primary">Favorite Columns</h6>
+                        <ul id="favColList" class="list-group list-group-flush small"></ul>
+                        <div id="noFavCols" class="text-muted small mt-2">No favorite columns yet.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <small class="text-muted me-auto">Favorites are saved automatically to your browser.</small>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+<script>
+    // --- 1. State Management (LocalStorage) ---
+    const STORAGE_KEY = 'schema_visualizer_favs';
+    let favorites = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { tables: [], columns: [] };
+
+    function saveFavorites() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+        renderFavModal(); // Refresh modal list
+        handleInput(); // Refresh search results to re-sort
+    }
+
+    function toggleFavTable(tableName) {
+        if (favorites.tables.includes(tableName)) {
+            favorites.tables = favorites.tables.filter(t => t !== tableName);
+        } else {
+            favorites.tables.push(tableName);
+        }
+        saveFavorites();
+    }
+
+    function toggleFavColumn(colName) {
+        if (favorites.columns.includes(colName)) {
+            favorites.columns = favorites.columns.filter(c => c !== colName);
+        } else {
+            favorites.columns.push(colName);
+        }
+        saveFavorites();
+    }
+
+    // --- 2. Render Functions ---
+    
+    function renderFavModal() {
+        // Tables
+        const tList = document.getElementById('favTableList');
+        tList.innerHTML = '';
+        if (favorites.tables.length > 0) {
+            document.getElementById('noFavTables').style.display = 'none';
+            favorites.tables.forEach(t => {
+                tList.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${t} <button class="btn btn-sm btn-outline-danger" onclick="toggleFavTable('${t}')">&times;</button>
+                </li>`;
+            });
+        } else {
+            document.getElementById('noFavTables').style.display = 'block';
+        }
+
+        // Columns
+        const cList = document.getElementById('favColList');
+        cList.innerHTML = '';
+        if (favorites.columns.length > 0) {
+            document.getElementById('noFavCols').style.display = 'none';
+            favorites.columns.forEach(c => {
+                cList.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${c} <button class="btn btn-sm btn-outline-danger" onclick="toggleFavColumn('${c}')">&times;</button>
+                </li>`;
+            });
+        } else {
+            document.getElementById('noFavCols').style.display = 'block';
+        }
+    }
+
+    // --- 3. Search & Network Logic ---
+    let network = null;
+    let debounceTimer;
+
+    function handleInput() {
+        clearTimeout(debounceTimer);
+        const query = document.getElementById('searchInput').value;
+        debounceTimer = setTimeout(() => fetchData(query), 300);
+    }
+
+    function fetchData(query) {
+        // 1. Fetch List (POST request to send favorites)
+        fetch('/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                query: query, 
+                favTables: favorites.tables,
+                favColumns: favorites.columns 
+            })
+        })
+        .then(r => r.json())
+        .then(data => updateTable(data, query));
+
+        // 2. Fetch Graph (GET request)
+        fetch(`/graph-data?q=${encodeURIComponent(query)}`)
+            .then(r => r.json())
+            .then(data => initNetwork(data));
+    }
+
+    function updateTable(data, query) {
+        const tbody = document.getElementById('resultsBody');
+        const noResults = document.getElementById('noResults');
+        tbody.innerHTML = '';
+
+        if (data.length === 0) {
+            noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
+            data.forEach(row => {
+                const isFavT = favorites.tables.includes(row.Table_Name);
+                // const isFavC = favorites.columns.includes(row.Column_Name); // Optional column star
+
+                const tr = document.createElement('tr');
+                if(isFavT) tr.classList.add("table-warning"); // Highlight row if table is favorite
+
+                tr.innerHTML = `
+                    <td class="text-center">
+                        <i class="fas fa-star fav-btn ${isFavT ? 'active' : ''}" 
+                           onclick="toggleFavTable('${row.Table_Name}')" 
+                           title="Favorite Table"></i>
+                    </td>
+                    <td>
+                        <div class="table-name-lg">${highlight(row.Table_Name, query)}</div>
+                    </td>
+                    <td>
+                        <div class="col-name-md">${highlight(row.Column_Name, query)}</div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
+
+    function highlight(text, query) {
+        if (!query) return text;
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.toString().replace(regex, '<span class="bg-warning text-dark px-1 rounded">$1</span>');
+    }
+
+    function initNetwork(data) {
+        const container = document.getElementById('network-container');
+        const nodes = new vis.DataSet(data.nodes);
+        const edges = new vis.DataSet(data.edges);
+
+        const options = {
+            nodes: {
+                shape: 'dot',
+                font: { face: 'Segoe UI', multi: true } 
+            },
+            groups: {
+                table: {
+                    shape: 'box',
+                    color: { background: '#ff7675', border: '#d63031' },
+                    font: { size: 30, color: 'white', bold: true }, // BIGGER FONT for Tables
+                    margin: 10
+                },
+                column: {
+                    shape: 'ellipse',
+                    color: { background: '#74b9ff', border: '#0984e3' },
+                    font: { size: 16, color: '#2d3436' }
+                }
+            },
+            physics: {
+                stabilization: false,
+                barnesHut: { gravitationalConstant: -3000, springLength: 150 }
+            }
+        };
+
+        if(network) { network.destroy(); }
+        network = new vis.Network(container, { nodes, edges }, options);
+    }
+
+    // Init
+    document.addEventListener("DOMContentLoaded", () => {
+        renderFavModal();
+        handleInput(); // Load initial data
+    });
+
+</script>
+
+</body>
+</html>
