@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schema Visualizer</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Vis.js -->
+    <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+        
+        .table-name-lg { font-size: 1.3rem; font-weight: 800; color: #2c3e50; }
+        .col-name-md { font-size: 1rem; color: #555; }
+        
+        .card { border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 12px; margin-bottom: 20px; }
+        
+        .search-box { 
+            padding: 15px 25px; font-size: 1.2rem; border-radius: 50px; border: 2px solid #dee2e6; 
+            transition: all 0.3s;
+        }
+        .search-box:focus { border-color: #0d6efd; box-shadow: 0 0 15px rgba(13, 110, 253, 0.2); outline: none; }
+
+        #network-container { height: 700px; background: white; border-radius: 12px; }
+
+        /* Star Button Styles */
+        .btn-fav { background: none; border: none; cursor: pointer; color: #d3d3d3; transition: transform 0.2s, color 0.2s; padding: 0 5px; }
+        .btn-fav:hover { color: #f39c12; transform: scale(1.2); }
+        .btn-fav.active { color: #f1c40f; } /* Gold */
+
+        /* Modal Items */
+        .fav-item { padding: 10px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+        .fav-item:last-child { border-bottom: none; }
+        .fav-label { font-size: 0.95rem; }
+        .fav-sub { font-size: 0.8rem; color: #888; display: block;}
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 shadow">
+    <a class="navbar-brand fw-bold" href="#">📊 Schema Viewer</a>
+    <div class="ms-auto d-flex align-items-center gap-3">
+        <div class="text-white small opacity-75 me-3">
+            {{ total_tables }} Tables &bull; {{ total_columns }} Columns
+        </div>
+        <button class="btn btn-warning fw-bold rounded-pill px-4" onclick="openFavModal()">
+            <i class="fas fa-star me-2"></i> My Favorites
+        </button>
+    </div>
+</nav>
+
+<div class="container-fluid px-4 py-4">
+    
+    <!-- Search Bar -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-6">
+            <input type="text" id="searchInput" class="form-control search-box" 
+                   placeholder="Type to search... (Clear to view Favorites Only)" 
+                   onkeyup="handleInput()">
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Visualization (Left) -->
+        <div class="col-lg-7 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold m-0 text-primary">Relationship Graph</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div id="network-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data List (Right) -->
+        <div class="col-lg-5 mb-4">
+            <div class="card h-100" style="max-height: 770px; display: flex; flex-direction: column;">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between">
+                    <h5 class="fw-bold m-0">Schema Details</h5>
+                    <span id="list-status" class="badge bg-secondary">Loading...</span>
+                </div>
+                <div class="card-body p-0 overflow-auto">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light sticky-top" style="z-index: 10;">
+                            <tr>
+                                <th>Table Name</th>
+                                <th>Column Name</th>
+                                <th style="width: 60px;" class="text-center">Fav</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody"></tbody>
+                    </table>
+                    <div id="noResults" class="text-center p-5 text-muted" style="display:none;">
+                        <i class="fas fa-folder-open fa-3x mb-3 text-light"></i><br>
+                        <span id="noResultsText">No data found.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="favModal" tabindex="-1">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold"><i class="fas fa-star me-2"></i>My Favorites</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="favList" class="bg-white" style="max-height: 500px; overflow-y: auto;">
+                    <!-- JS Injects here -->
+                </div>
+                <div id="emptyFavs" class="text-center py-5 text-muted" style="display:none;">
+                    No favorites saved yet.
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <small class="text-muted me-auto">Favorites are linked to Table + Column pairs.</small>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+<script>
+    let network = null;
+    let debounceTimer;
+
+    // --- FAVORITES LOGIC ---
+    function toggleFavorite(tableName, colName) {
+        fetch('/toggle-favorite', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ table: tableName, column: colName })
+        })
+        .then(r => r.json())
+        .then(data => {
+            handleInput(); // Refresh views
+            if(document.getElementById('favModal').classList.contains('show')) {
+                openFavModal(); // Refresh modal if open
+            }
+        });
+    }
+
+    function openFavModal() {
+        const modal = new bootstrap.Modal(document.getElementById('favModal'));
+        fetch('/get-favorites')
+            .then(r => r.json())
+            .then(data => {
+                const listDiv = document.getElementById('favList');
+                const emptyDiv = document.getElementById('emptyFavs');
+                listDiv.innerHTML = '';
+
+                if (!data || data.length === 0) {
+                    emptyDiv.style.display = 'block';
+                } else {
+                    emptyDiv.style.display = 'none';
+                    data.forEach(item => {
+                        listDiv.innerHTML += `
+                            <div class="fav-item">
+                                <div>
+                                    <div class="fav-label fw-bold text-dark">${item.table}</div>
+                                    <div class="fav-sub"><i class="fas fa-columns me-1"></i> ${item.column}</div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-danger" 
+                                        onclick="toggleFavorite('${item.table}', '${item.column}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>`;
+                    });
+                }
+                
+                if (!document.getElementById('favModal').classList.contains('show')) {
+                    modal.show();
+                }
+            });
+    }
+
+    // --- SEARCH & VIEW LOGIC ---
+    function handleInput() {
+        clearTimeout(debounceTimer);
+        const query = document.getElementById('searchInput').value;
+        debounceTimer = setTimeout(() => fetchData(query), 300);
+    }
+
+    function fetchData(query) {
+        // Update Status Badge
+        const statusBadge = document.getElementById('list-status');
+        if(!query) {
+            statusBadge.className = "badge bg-warning text-dark";
+            statusBadge.innerText = "Favorites Only";
+        } else {
+            statusBadge.className = "badge bg-success";
+            statusBadge.innerText = "Search Results";
+        }
+
+        fetch(`/search?q=${encodeURIComponent(query)}`)
+            .then(r => r.json())
+            .then(data => updateList(data, query));
+
+        fetch(`/graph-data?q=${encodeURIComponent(query)}`)
+            .then(r => r.json())
+            .then(data => initNetwork(data));
+    }
+
+    function updateList(data, query) {
+        const tbody = document.getElementById('resultsBody');
+        const noResults = document.getElementById('noResults');
+        tbody.innerHTML = '';
+
+        if (data.length === 0) {
+            noResults.style.display = 'block';
+            document.getElementById('noResultsText').innerText = query ? "No matches found." : "No favorites yet. Search to add some!";
+        } else {
+            noResults.style.display = 'none';
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                if (row.is_fav) tr.classList.add("table-warning"); 
+                
+                // Note: Only ONE button now, on the column
+                tr.innerHTML = `
+                    <td class="table-name-lg">${highlight(row.Table_Name, query)}</td>
+                    <td class="col-name-md">${highlight(row.Column_Name, query)}</td>
+                    <td class="text-center">
+                        <button class="btn-fav ${row.is_fav ? 'active' : ''}" 
+                                onclick="toggleFavorite('${row.Table_Name}', '${row.Column_Name}')">
+                            <i class="fas fa-star fa-lg"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
+
+    function highlight(text, query) {
+        if (!query) return text;
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.toString().replace(regex, '<span class="bg-warning text-dark px-1 rounded">$1</span>');
+    }
+
+    function initNetwork(data) {
+        const container = document.getElementById('network-container');
+        const nodes = new vis.DataSet(data.nodes);
+        const edges = new vis.DataSet(data.edges);
+
+        const options = {
+            nodes: { shape: 'dot', font: { face: 'Segoe UI' } },
+            groups: {
+                table: {
+                    shape: 'box', color: { background: '#ff7675', border: '#d63031' },
+                    font: { size: 30, color: 'white', bold: true }, margin: 10
+                },
+                column: {
+                    shape: 'ellipse', color: { background: '#74b9ff', border: '#0984e3' },
+                    font: { size: 14, color: '#2d3436' }
+                }
+            },
+            physics: {
+                stabilization: false,
+                barnesHut: { gravitationalConstant: -3000, springLength: 150 }
+            }
+        };
+
+        if(network) { network.destroy(); }
+        network = new vis.Network(container, { nodes, edges }, options);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => handleInput());
+</script>
+
+</body>
+</html>
