@@ -714,8 +714,8 @@ import json
 app = Flask(__name__)
 
 # --- CONFIGURATION ---
-CSV_FILE_PATH = 'screeningapplicant.csv'
-FAV_FILE_PATH = 'favorites.json'
+CSV_FILE_PATH = r'realpage\screeningapplicant.csv'
+FAV_FILE_PATH = r'realpage\favorites.json'
 
 # --- DATA LOADING ---
 def load_data():
