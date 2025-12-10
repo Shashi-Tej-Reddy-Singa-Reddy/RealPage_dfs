@@ -2,5 +2,9 @@
     {
         "table": "ScreeningApplicant",
         "column": "apgID"
+    },
+    {
+        "table": "ScreeningServiceInfo",
+        "column": "ConsumerID"
     }
 ]
